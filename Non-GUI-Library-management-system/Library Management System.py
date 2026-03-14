@@ -12,6 +12,17 @@ import sys,time
 lib=[]
 m=0
 
+def Read_choice(prompt):
+    while True:
+        choice=input(prompt).strip()
+        if choice.isdigit():
+            return int(choice)
+        print("Enter a valid numeric choice")
+        print("\n")
+
+def Continue_prompt():
+    return input("Do you want to continue? [y/n]: ").strip().lower().startswith('y')
+
 def Add_book():
     c=1
     while True :
@@ -23,52 +34,80 @@ def Add_book():
         print("Book Details Added!!")
         print("\n")
         
-        cont=input("Do you want to continue? [y/n]: ")
-        if 'n' in cont or 'N' in cont:
+        if not Continue_prompt():
             break
 
 def Del_book():
     while True:
+        if not lib:
+            print("No books are available in the library")
+            print("\n")
+            break
+
         a=input("Enter the name of the Book: ")
-        for book_det in lib:
+        deleted=False
+        for index, book_det in enumerate(lib):
             if a in book_det:
-                del book_det[a]
+                del lib[index]
+                deleted=True
                 print("Book Details have been Deleted!!")
                 print("\n")
+                break
+
+        if not deleted:
+            print("Book is not present in the Library")
+            print("\n")
         
-        cont=input("Do you want to continue? [y/n]: ")
-        if 'n' in cont or 'N' in cont:
+        if not Continue_prompt():
             break
 
 def Search_book():
     while True:
+        if not lib:
+            print("No books are available in the library")
+            print("\n")
+            break
+
         print("Enter 1 to Search using Book name")
         print("Enter 2 to Search using Author name")
-        n=int(input("Enter Your Choice: "))
+        n=Read_choice("Enter Your Choice: ")
         if n==1:
             a=input("Enter the name of the Book: ")
+            found=False
             for book_det in lib:
                 if a in book_det:
                     print("Book is Present in the Library")
                     print("Details: ", book_det)
                     print("\n")
-                else:
-                    print("Book is not present in the Library")
+                    found=True
+                    break
+            if not found:
+                print("Book is not present in the Library")
+                print("\n")
         elif n==2:
             a=input("Enter the Author's name of the Book: ")
+            found=False
             for book_det in lib:
                 if a in book_det.values():
                     print("Book is Present in the Library")
                     print("Details: ", book_det)
                     print("\n")
-                else:
-                    print("Book is not present in the Library")
+                    found=True
+                    break
+            if not found:
+                print("Book is not present in the Library")
+                print("\n")
+        else:
+            print("Enter a valid Choice")
+            print("\n")
 
-        cont=input("Do you want to continue? [y/n]: ")
-        if 'n' in cont or 'N' in cont:
+        if not Continue_prompt():
             break
 
 def Display_All():
+    if not lib:
+        print("No books are available in the library")
+        return
     print("All the details of the books:\n")
     print('\n'.join(str(book) for book in lib))
     
@@ -80,7 +119,7 @@ while m!=5:
     print("Enter 3 to Search a book")
     print("Enter 4 to Display all book Details")
     print("Enter 5 to Exit the program")
-    m=int(input("Enter your choice: "))
+    m=Read_choice("Enter your choice: ")
     print("\n")
 
     if m==1:
